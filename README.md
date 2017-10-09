@@ -1,2 +1,2 @@
-# touche
+# Touché
 Touch gestures for javascript
