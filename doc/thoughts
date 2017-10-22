@@ -1,0 +1,33 @@
+__GLOBAL_OVERRIDES['touche']
+
+touche()
+
+const el = document.getElementById('playground')
+
+touche(el)
+
+touche({
+    el: el
+})
+
+touche()
+    .set({
+        el: el
+    })
+
+delete touche.prototype.defaults['someproperty']
+
+touche.prototype.defaults['inputClass'] = 'TouchMouse'
+    
+
+touche(el)
+  .addPointer({
+    x: 0,
+    y: 0
+  })
+
+touche()
+    .hash()
+
+
+touche.instances

@@ -1,0 +1,242 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+  }
+  
+  html, body {
+    height: 100%;
+    position: relative;
+    font-size: 100%;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  h1, h2, h3 {
+    
+    font-weight: 600;
+  }
+
+  h1, h2, h3, a.source, .touchable {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .example h2 {
+    text-align: center;
+    padding: 15px;
+    background: #5ba7ff;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  header {
+    /*background: #00008B;*/
+    /*background: #000;*/
+    background-image: linear-gradient(#fff, #e1efff);
+  }
+
+  header .logo {
+    display: inline-block;
+    height: 3em;
+    vertical-align: middle;
+  }
+
+  .logo-wrapper {
+    display: inline-block;
+    padding: 15px;
+    border: 1px solid #5ba7ff;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+    position: relative;
+  }
+
+  .logo-wrapper .virtualpointer {
+    left: 90%;
+    top: 57%;
+  }
+
+  h1 {
+    font-weight: 600;
+  }
+
+  h1.title {
+    margin-top: 0px;
+    margin-bottom: 30px;
+    font-weight: bold;
+    white-space: nowrap;
+    
+    color: #fff;
+    padding: 15px 0;
+
+    font-size: 1.5em;
+    text-align: center;
+  }
+
+  h1.title .js {
+    color: #fff;
+    background: #f00;
+    display: inline-block;
+    padding: 0 10px;
+  }
+
+  .explanation {
+    font-size: 0.9em;
+    background: #5ba7ff;
+    padding: 0 15px 15px 15px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: auto;
+    padding: 0 15px;
+  }
+
+  .blocks {
+    clear: both;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
+  .block {
+    /*touch-action: none;*/
+    /*max-width: 30vh;*/
+    width: 100%;
+    float: left;
+    padding: 15px;
+  }
+
+  .block .block-content {
+    float: left;
+    width: 100%;
+    padding-bottom: 100%;
+    background: #fff;
+    border: 1px solid #5ba7ff;
+    position: relative;
+  }
+
+  .col-in {
+    float: left;
+    width: 100%;
+    height: 100%;
+    /*box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);*/
+    /*border: 1px solid #5ba7ff;*/
+  }
+
+  .touchable {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow:hidden;
+  }
+
+  .touchable .event {
+    padding: 15px 5px;
+    text-align: center;
+    background-color: #5ba7ff;
+    transform: scale(1.2);
+    margin: 5px;
+    font-weight: bold;  }
+
+  .touchable .event.new {
+    background-color: #e1efff;
+    transform: scale(1.0);
+    transition: background-color 300ms linear, transform 300ms linear;
+  }
+
+  footer {
+    margin-top: 30px;
+    clear: both;
+    float: left;
+    width: 100%;
+    background: #5ba7ff;
+    padding: 30px 0;
+  }
+
+  a.source {
+    font-size: .8em;
+    text-decoration: none;
+    color: #5ba7ff;
+    padding: 5px 0;
+    display: block;
+    clear: both;
+    display: none;
+  }
+
+  @media only screen and (min-width: 480px) {
+    .block {
+      width: 50%; 
+    }
+
+    h1.title {
+      padding: 30px 0;
+      text-align: left;
+    }
+    
+    h1 .logo {
+      height: 3em
+    }
+  }
+
+  @media only screen and (min-width: 800px) {
+    .block {
+      width: 33.33333%;
+    }    
+  }
+
+  @media only screen and (min-width: 480px) and (max-width: 799px) {
+    .blocks article:nth-child(2n+1){
+      clear: left;
+    }
+  }
+
+  @media only screen and (min-width: 800px)  {
+    .blocks article:nth-child(3n+1){
+      clear: left;
+    }
+  }
+
+  .virtualpointer {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .virtualpointer img {
+    position: absolute;
+    transform: translate(-22%, -23%);
+    width: 64px;
+  }
+
+  .rotable {
+    position: absolute;
+    width: 75%;
+    height: 75%;
+    background: red;
+    left: 12.5%;
+    top: 12.5%;
+  }
+
+  .scalable {
+    position: absolute;
+    width: 25%;
+    height: 25%;
+    top: 12.5%;
+    left: 12.5%;
+    background: url('eggplant.png');
+    background-size:     cover;
+    background-repeat:   no-repeat;
+    background-position: center center;
+  }
+
+  #example-rotate-with-virtual-pointer-touchable {
+    touch-action: none;
+  }

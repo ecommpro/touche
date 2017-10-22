@@ -1,0 +1,39 @@
+input/
+  index.js (automatic)
+
+  virtual/
+    index.js (virtual)
+
+  dom/
+    touch.js (touch devices)
+    mouse.js (mouse devices)
+    pointer.js (PointerEvent devices)
+  
+  filter.js (combine and filter inputs)
+
+  touche/input/dom
+
+
+input only requires a callback function
+
+
+
+
+touche()
+  .addInput(touche.inputs.dom.mouse)
+
+
+touche.gestures.rotate()
+  .tracker()
+
+tracker: receives and keeps last input values and on gesture end starts inertial movement. can work with 1D (rotation or scale) or 2D values (pan)
+
+could use our own requestAnimationFrame implementation or a third party one.
+
+
+const inertiaGenerator = touche.inertiaGenerator()
+touche.gestures.rotate()
+  .on('change', (e) => inertiaGenerator.add(e.angle))
+  .on('end', inertiaGenerator.start())
+  .on('start', inertiaGenerator.stop())
+  

@@ -1,0 +1,13 @@
+{
+  "context": "src",
+  "entry": {
+    "touche": [
+      "./index.js"
+    ]
+  },
+  "output": {
+    "path": "dist",
+    "publicPath": "/dist/"
+  },
+  "devPort": 3000
+}

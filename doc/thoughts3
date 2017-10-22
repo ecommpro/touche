@@ -1,0 +1,25 @@
+Inputs
+  DOM
+    Autodetect
+    Pointer
+    Touch
+    Mouse
+  Virtual
+  Filter
+
+Gestures
+  Tap
+  Press
+  Swipe
+  Pan
+  Pinch
+  Rotate
+  Filter
+  Combinator
+
+Virtual elements
+Inertia
+
+
+
+
