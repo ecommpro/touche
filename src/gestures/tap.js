@@ -22,7 +22,8 @@ export default (options = {}) => {
 
   const
     autodetectPointers = options.pointers === 0,
-    autodetectTaps = options.taps === 0
+    autodetectTaps = options.taps === 0,
+    {event} = options
 
   let
     failTimeout, intervalTimeout,
@@ -34,7 +35,7 @@ export default (options = {}) => {
   const gesture = Object.assign(Object.create(proto), {
     options: options,
     taps: 0,
-    pointers: 0,    
+    pointers: 0,
     check(input, session) {
       const
         self = this,
@@ -49,7 +50,7 @@ export default (options = {}) => {
         clearTimeout(failTimeout)
         failTimeout = setTimeout(() => self.fail(), options.failTimeout)
 
-        if (!autodetectPointers && npointers > options.pointers) {          
+        if (!autodetectPointers && npointers > options.pointers) {
           return this.fail()
         }
         
@@ -70,21 +71,21 @@ export default (options = {}) => {
           taps++
           okPointers = false
 
-          this.trigger('up', {taps})
-
           clearTimeout(failTimeout)
           clearTimeout(intervalTimeout)
           intervalTimeout = setTimeout(checkInterval, options.interval)
 
           if (!autodetectTaps && taps === options.taps) {
-            this.change({
-              taps: taps,
-              pointers: pointersGoal
-            })
-            return this.end()
+            this.start()
           }
         }
-      }      
+      }
+
+      if (this.isStarted()) {
+        this.emit(event)
+        return this.end()
+      }
+
     },
     reset() {
       clearTimeout(failTimeout)
@@ -102,10 +103,15 @@ export default (options = {}) => {
 
   checkInterval = function() {
     if (autodetectTaps) {
+      this.emit(event)
+
+      /*
       this.change({
         taps: taps,
         pointers: pointersGoal
       })
+      */
+
       this.end()
     } else {
       this.fail()

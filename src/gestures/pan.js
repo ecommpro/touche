@@ -1,7 +1,7 @@
 import base from './base'
 
 import {
-  STATE_CHANGE as CHANGE,
+  STATE_STARTED as STARTED,
 } from './constants'
 
 const proto = Object.assign({}, base, {
@@ -9,12 +9,21 @@ const proto = Object.assign({}, base, {
     event: 'pan',
     pointers: 1,
     threshold: 0,
+    direction: 0,
   }
 })
-  
+
+import {
+  POINTER_MOVE,
+} from '../input/constants'
+
+
 export default (options = {}) => {
 
   options = Object.assign({}, proto.defaults, options)
+
+  const {event} = options
+  
   let dirx, diry
   let thresholdReached
 
@@ -39,18 +48,23 @@ export default (options = {}) => {
       thresholdReached = thresholdReached || abs(deltax) > threshold || abs(deltay) > threshold
 
       if (this.isProcessing() && okPointers && thresholdReached) {
-        this.trigger('start')
-        this.setState(CHANGE)
-        session.calculations.deltax = deltax = 0
-        session.calculations.deltay = deltay = 0
+        this.emit(`${event}start`)
+        this.start()
       }
 
-      if (this.isChange()) {
+      if (input.action & POINTER_MOVE && this.isStarted()) {
+        this.emit(`${event}move`)
+        /*
         this.change({
           pointers: npointers,
           x: deltax,
           y: deltay
         })
+        */
+      }
+
+      if (this.state & STARTED && input.isLast) {
+        this.emit(`${event}end`)
       }
     },
     reset() {

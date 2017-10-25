@@ -1,7 +1,8 @@
 import base from './base'
 
 import {
-  STATE_CHANGE as CHANGE,
+  STATE_PROCESSING as PROCESSING,
+  STATE_STARTED as STARTED,
 } from './constants'
 
 const proto = Object.assign({}, base, {
@@ -11,10 +12,17 @@ const proto = Object.assign({}, base, {
     threshold: 0,
   }
 })
+
+import {
+  POINTER_MOVE,
+} from '../input/constants'
+
   
 export default (options = {}) => {
 
   options = Object.assign({}, proto.defaults, options)
+
+  const {event} = options
 
   let thresholdReached
 
@@ -24,36 +32,35 @@ export default (options = {}) => {
     
     check(input, session) {
       const
-        {state} = this,
-        {action} = input,
         {npointers} = session,
         {threshold, pointers} = options,
         {abs} = Math
-      
+
       let
-        {calculations: { deltaangle, deltaangleDeg }} = session
+        {rotation} = input
 
       let
         okPointers = pointers === 0 || npointers === pointers
       
-      thresholdReached = thresholdReached || abs(deltaangleDeg) >= threshold
+      thresholdReached = thresholdReached || abs(rotation) >= threshold
 
       if (this.isProcessing() && okPointers && thresholdReached) {
-        this.trigger('start')
-        this.setState(CHANGE)
-        session.calculations.deltaangle = 
-        session.calculations.deltaangleDeg = 
-        deltaangleDeg =
-        deltaangle = 0
+        this.start()
+        this.emit(`${event}start`)
       }
       
-      if (this.isChange()) {
+      if (input.action & POINTER_MOVE && this.isStarted()) {
+        this.emit(`${event}move`)
+        /*
         this.change({
-          pointers: npointers,
-          angle: deltaangleDeg,
-          angleRad: deltaangle,
+          angle: -rotation,
         })
-      }      
+        */
+      }
+
+      if (this.isStarted() && input.isLast) {
+        this.emit(`${event}end`)
+      }
     }
   }).initialize()
   

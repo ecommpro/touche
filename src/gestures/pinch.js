@@ -1,8 +1,12 @@
 import base from './base'
 
 import {
-  STATE_CHANGE as CHANGE,
+  STATE_STARTED as STARTED,
 } from './constants'
+
+import {
+  POINTER_MOVE,
+} from '../input/constants'
 
 const proto = Object.assign({}, base, {
   defaults: {
@@ -16,13 +20,16 @@ export default (options = {}) => {
 
   options = Object.assign({}, proto.defaults, options)
 
+  const {event} = options
+
   let thresholdReached
 
   return Object.assign(Object.create(proto), {
     options: options,
     pointers: 0,
     
-    check(input, session) {      
+    check(input, session) {
+
       const
         {state} = this,
         {action} = input,
@@ -30,26 +37,32 @@ export default (options = {}) => {
         {threshold, pointers} = options,
         {abs} = Math
       
-      let
-        {calculations: { deltadistance }} = session
-
-      let
+      const
+        {calculations: { distance }} = session
+        
+      const
         okPointers = pointers === 0 || npointers === pointers
       
-      thresholdReached = thresholdReached || abs(deltadistance) >= threshold
+      thresholdReached = true || thresholdReached || abs(distance) >= threshold
 
       if (this.isProcessing() && okPointers && thresholdReached) {
-        this.trigger('start')
-        this.setState(CHANGE)
-        session.deltadistance = deltadistance = 0
+        this.start()
+        this.emit(`${event}start`)
       }
       
-      if (this.isChange()) {
+      if (input.action & POINTER_MOVE && this.isStarted()) {
+        this.emit(`${event}move`)
+        /*
         this.change({
           pointers: npointers,
-          distance: deltadistance,
+          distance,
         })
-      }      
+        */
+      }
+
+      if (this.isStarted() && input.isLast) {
+        this.emit(`${event}end`)
+      }
     }
   }).initialize()
   

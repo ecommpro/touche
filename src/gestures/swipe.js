@@ -1,7 +1,7 @@
 import base from './base'
 
 import {
-  STATE_CHANGE as CHANGE,
+  STATE_STARTED as STARTED,
 } from './constants'
 
 import {
@@ -14,6 +14,7 @@ const proto = Object.assign({}, base, {
     pointers: 1,
     threshold: 0,
     velocity: 0.3,
+    direction: 0,
   }
 })
   
@@ -24,7 +25,8 @@ export default (options = {}) => {
   const attributes = {
     options,
     pointers: 0
-  }
+  },
+  {event} = options
 
   let thresholdReached
 
@@ -37,22 +39,19 @@ export default (options = {}) => {
         {abs} = Math
       
       let
-        {calculations: { deltax, deltay, velocityx, velocityy, velocity }} = session
+        { deltaX, deltaY, velocity, velocityX, velocityY, direction } = input
 
       let
         okPointers = npointersMax >= options.pointers,
-        okVelocity = velocity >= options.velocity
+        okVelocity = abs(velocity) >= options.velocity
 
-      thresholdReached = thresholdReached || abs(deltax) > threshold || abs(deltay) > threshold
+      thresholdReached = thresholdReached || abs(deltaX) > threshold || abs(deltaY) > threshold
 
-      if (this.isProcessing() && okPointers && thresholdReached) {
-        this.trigger('start')
-        this.setState(CHANGE)
-      }
-        
-      if (input.isLast) {
+      if (input.isLast && okPointers && thresholdReached) {
         if (okVelocity) {
-          this.change()
+          this.emit(`${event}`)
+          this.emit(`${event}${direction}`)
+          this.end()
         } else {
           this.fail()
         }

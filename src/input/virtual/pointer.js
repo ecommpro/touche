@@ -2,6 +2,7 @@ import {
   POINTER_START,
   POINTER_MOVE,
   POINTER_END,
+  POINTER_SET,
 } from 'touche/input/constants'
 
 export default ({device, id}) => {
@@ -16,6 +17,13 @@ export default ({device, id}) => {
     move(x, y) {
       return this._event({
         action: POINTER_MOVE,
+        x: x,
+        y: y
+      })
+    },
+    set(x, y) {
+      return this._event({
+        action: POINTER_SET,
         x: x,
         y: y
       })

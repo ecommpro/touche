@@ -75,14 +75,18 @@ function examplePress() {
   var el = Example('Press')
   touche(el)
     .addGesture(touche.gestures.press())
-    .callback(logevent(el));
+    .onall(function(a, b, c) {
+      console.log(a, b, c);
+    });
 }
 
 function exampleSwipe() {
   var el = Example('Swipe')
   touche(el)
     .addGesture(touche.gestures.swipe())
-    .callback(logevent(el));
+    .onall(function(a, b, c) {
+      console.log(a, b, c);
+    });
 }
 
 function exampleTapPress() {
@@ -120,7 +124,6 @@ function exampleTapDoubleTap() {
     taps: 2
   })
 
-  
   /*
   var filter = touche.gestures.filter([
     tap,
@@ -132,9 +135,11 @@ function exampleTapDoubleTap() {
     .addGesture(tap)
     .addGesture(doubletap)
     .on('tap', logevent(el, function(data) {
+      console.log('TAP!')
       return 'tap';
     }))
     .on('doubletap', logevent(el, function(data) {
+      console.log('DOUBLETAP!')
       return 'doubletap';
     }))
 }
@@ -161,10 +166,7 @@ function examplePan() {
   touche(el)
     .addGesture(touche.gestures.pan({
       pointers: 0
-    }))
-    .callback(function(a, b, c) {
-      console.log(a, b, c)
-    });
+    }));
 }
 
 function examplePanWithThreshold() {
@@ -173,10 +175,7 @@ function examplePanWithThreshold() {
     .addGesture(touche.gestures.pan({
       threshold: 20,
       pointers: 1
-    }))
-    .callback(function(a, b, c) {
-      console.log(a, b, c)
-    });
+    }));
 }
 
 function examplePinch() {  
@@ -224,8 +223,7 @@ function exampleRotate() {
     .addGesture(touche.gestures.rotate({
       threshold: 10,
       pointers: 0
-    }))
-    .callback(logevent(el));
+    }));
 }
 
 function exampleVirtualPointers() {
@@ -266,16 +264,11 @@ function exampleVirtualPointers() {
     })
     .on('rotate', function(ev) {
       if(ev.input.pointerType !== 'virtual') {
-        console.log(ev.input)
         ev.input.srcEvent.preventDefault()
       }
       rotable.style.transform = 'rotate(' + ev.angle + 'deg) translateZ(0)';
       inertiaGenerator.add(ev.angle);
     });
-
-    
-
-    //console.log('VIRTUAL START')
     pointer.start();
 }
 

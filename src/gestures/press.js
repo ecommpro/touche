@@ -19,13 +19,13 @@ export default (options = {}) => {
   options = Object.assign({}, proto.defaults, options)
   
   const
-    autodetectPointers = options.pointers === 0
+    autodetectPointers = options.pointers === 0,
+    event = options.event
 
   let
     timeout,
     timedout,
     pointersGoal,
-    ok,
     okPointers
 
   const gesture = Object.assign(Object.create(proto), {
@@ -34,21 +34,24 @@ export default (options = {}) => {
     check(input, session) {
       const
         self = this,
-        {action} = input,
-        {npointers, calculations: { deltax, deltay }} = session,
+        {action, deltaX, deltaY} = input,
+        {npointers} = session,
         {threshold} = options,
         {abs} = Math,        
-        okMovement = threshold === 0 || (abs(deltax) < threshold && abs(deltay) < threshold)
-      
+        okMovement = threshold === 0 || (abs(deltaX) < threshold && abs(deltaY) < threshold)
+
       if (action & START) {
         timedout = false
         clearTimeout(timeout)
         timeout = setTimeout(() => {
           timedout = true
           if (okPointers) {
+            this.emit(event)
+            /*
             this.change({
               pointers: pointersGoal
             })
+            */
             this.end()
           } else {
             this.fail()
@@ -60,6 +63,11 @@ export default (options = {}) => {
         }
 
         okPointers = npointers === pointersGoal
+      }
+
+      if (!okMovement) {
+        clearTimeout(timeout)
+        return this.fail()
       }
 
       if (action & END) {

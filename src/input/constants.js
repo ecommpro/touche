@@ -11,13 +11,15 @@ const
   POINTER_START = 1,
   POINTER_MOVE = 2,
   POINTER_END = 4,
-  POINTER_CANCEL = 8
+  POINTER_CANCEL = 8,
+  POINTER_SET = 16
 
 const ACTION_MAP = {
   [POINTER_START]: 'start',
   [POINTER_MOVE]: 'move',
   [POINTER_END]: 'end',
-  [POINTER_CANCEL]: 'cancel'
+  [POINTER_CANCEL]: 'cancel',
+  [POINTER_SET]: 'set',
 }
 
 const EVENT_MAP = {
@@ -42,6 +44,14 @@ const EVENT_MAP = {
   mousecancel: POINTER_CANCEL
 }
 
+const
+  DIR_UP = 1,
+  DIR_RIGHT = 2,
+  DIR_DOWN = 4,
+  DIR_LEFT = 8,
+  DIR_HORIZONTAL = DIR_LEFT | DIR_RIGHT,
+  DIR_VERTICAL = DIR_UP | DIR_DOWN
+
 export {
   MOUSE_DEVICE,
   TOUCH_DEVICE,
@@ -54,7 +64,15 @@ export {
   POINTER_MOVE,
   POINTER_END,
   POINTER_CANCEL,
+  POINTER_SET,
   
   ACTION_MAP,
-  EVENT_MAP
+  EVENT_MAP,
+
+  DIR_UP,
+  DIR_LEFT,
+  DIR_DOWN,
+  DIR_RIGHT,
+  DIR_HORIZONTAL,
+  DIR_VERTICAL
 };

@@ -231,9 +231,9 @@
     height: 25%;
     top: 12.5%;
     left: 12.5%;
-    background: url('eggplant.png');
-    background-size:     cover;
-    background-repeat:   no-repeat;
+    background-color: #0f0;
+    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center center;
   }
 

@@ -2,13 +2,15 @@ import {hypo, radToDeg, angRange2PI, atan2, shortAngleDist} from '../helper/math
 import {point as P, vector as V, sub2d, sum2d} from '../helper/2d'
 
 import getCenter from './center'
+import getDirection from './direction'
 import getDistance from './distance'
 import getRotation from './rotation'
 
 import {
   POINTER_START,
   POINTER_MOVE,
-  POINTER_END
+  POINTER_END,
+  POINTER_SET
 } from '../input/constants'
 
 function clonePointers(pointers) {
@@ -16,11 +18,10 @@ function clonePointers(pointers) {
 }
 
 export default function(session, input) {
-
   let { calculations, pointers } = session
   let { action } = input
 
-  if (input.isFirst || input.isLast) {
+  if (input.isFirst) {
     calculations.delta = {x: 0, y: 0}
     
     if (typeof(calculations.scale) === 'undefined') {
@@ -30,6 +31,8 @@ export default function(session, input) {
     if (typeof(calculations.rotation) === 'undefined') {
       calculations.rotation = 0
     }
+
+    calculations.t = Date.now()
   }
 
   if (!pointers.length) {
@@ -37,13 +40,13 @@ export default function(session, input) {
   }
 
   let center = getCenter(pointers)
-  
+
   let distance = getDistance({
     center,
     pointers
   })
 
-  if (action & ~ POINTER_MOVE) {
+  if (action & ~ (POINTER_MOVE | POINTER_SET)) {
     calculations.pointers0 = clonePointers(pointers)
     calculations.center0 = center
     calculations.delta0 = calculations.delta
@@ -70,11 +73,30 @@ export default function(session, input) {
   calculations.distance = distance
 
   calculations.rotation = rotation0 + rotation
+  calculations.rotationDeg = radToDeg(calculations.rotation)
+
+  let direction = getDirection(delta)
+
+  let deltat = Date.now() - calculations.t
+  if (deltat === 0) {
+    deltat = 1
+  }
+
+  let velocityx = delta.x / deltat
+  let velocityy = delta.y / deltat
+  let velocity = hypo(delta.x, delta.y) / deltat
+
+  calculations.velocityx = velocityx
+  calculations.velocityy = velocityy
+  calculations.velocity = velocity
 
   Object.assign(input, {
     deltaX: delta.x,
     deltaY: delta.y,
     distance,
+    velocityx,
+    velocityy,
+    velocity,
     scale: calculations.scale,
     rotation: calculations.rotation,
     rotationDeg: radToDeg(calculations.rotation),

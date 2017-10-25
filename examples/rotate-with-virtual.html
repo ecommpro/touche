@@ -42,17 +42,20 @@
 <script src="/dist/touche.js"></script>
 <script>
   var virtualInput = touche.input.virtual();
+  var pointer = virtualInput.pointer(1)
 
   var rotate = touche.gestures.rotate();
   
   touche(document)
     .addGesture(rotate)
     .addInput(virtualInput)
+    .on('beforeinput', function() {
+    })
     .on('rotate', function(e) {
       console.log(e)
     })
   ;
-  virtualInput.pointer(1).start(window.innerWidth / 2, window.innerHeight / 2)
+  pointer.start(window.innerWidth / 2, window.innerHeight / 2)
   //virtualInput.pointer(1).start()
   //virtualInput.pointer(2).start(window.innerWidth / 2, window.innerHeight)
 

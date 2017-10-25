@@ -32,6 +32,11 @@ export default ({
   }
 
   const callback = function(input) {
+    
+    // TODO: WE NEED A BETTER CHECK
+    if (input.device !== 'virtual') {
+      this.trigger('beforeinput', input)
+    }
 
     let {device, action, pointerType, id, x, y, event} = input
     let pointer, session, hash
@@ -49,51 +54,47 @@ export default ({
 
     input.isFirst = false
     input.isLast = false
-    
-    switch(action) {
-      case POINTER_START:
-        pointer = createPointer({
-          x: input.x,
-          y: input.y
-        })
 
-        input.talive = 0
-        input.isFirst = session.npointers === 0
-        
-        session._pointersHash[gid] = pointer
-        session.pointers.push(pointer)
-        session.npointers++
-        npointers++
+    if (action & POINTER_START) {
+      pointer = createPointer({
+        x: input.x,
+        y: input.y
+      })
 
-        if (session.npointers > session.npointersMax) {
-          session.npointersMax = session.npointers
-        }
-        break
+      input.talive = 0
+      input.isFirst = session.npointers === 0
+      
+      session._pointersHash[gid] = pointer
+      session.pointers.push(pointer)
+      session.npointers++
+      npointers++
 
-      case POINTER_MOVE:
-        pointer = session._pointersHash[gid]
-        pointer.moveTo(input.x, input.y)
-        input.distance = pointer.distance
-        break
+      if (session.npointers > session.npointersMax) {
+        session.npointersMax = session.npointers
+      }
+    } else {
+      pointer = session._pointersHash[gid]
+      switch(action) {
+        case POINTER_MOVE:
+          pointer.moveTo(input.x, input.y)
+          input.distance = pointer.distance
+          break
+  
+        case POINTER_END:
+        case POINTER_CANCEL:
+          let index = session.pointers.indexOf(pointer)
+          session.pointers.splice(index, 1)
 
-      case POINTER_END:
-      case POINTER_CANCEL:
-        pointer = session._pointersHash[gid]
-
-        let index = session.pointers.indexOf(pointer)
-        session.pointers.splice(index, 1)
-
-        input.talive = pointer.talive()
-        session.npointers--
-        npointers--
-
-        input.isLast = session.npointers === 0
-        delete session._pointersHash[gid]
-        break
+          input.talive = pointer.talive()
+          session.npointers--
+          npointers--
+  
+          input.isLast = session.npointers === 0
+          delete session._pointersHash[gid]
+          break
+      }
     }
-
     this.trigger('input', input, session)
-    
   }
 
   const inputManager = Object.assign({}, evented, {

@@ -41,8 +41,11 @@ export default {
         if (this._delegates.length) {
           this._delegates.forEach((delegate) => delegate.call(self, self, _eventName, handler, ...args))
         } else {
-          //console.log(eventName, ...args)
-          handler.call(self, ...args)
+          if (eventName === '*') {
+            handler.call(self, _eventName, ...args)
+          } else {
+            handler.call(self, ...args)
+          }          
         }
       })
     }

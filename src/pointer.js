@@ -3,6 +3,13 @@ import {hypo} from 'touche/helper/math'
 import timeSeries from 'touche/timeSeries';
 
 self = {
+  set(x, y) {
+    this.x = x
+    this.y = y
+    this.deltax = 0
+    this.deltay = 0
+    this.distance = 0
+  },
   moveTo(x, y) {
     this.x = x
     this.y = y

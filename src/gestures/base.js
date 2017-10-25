@@ -3,40 +3,42 @@ import evented from 'touche/mixins/evented'
 import {
   STATE_READY as READY,
   STATE_PROCESSING as PROCESSING,
-  STATE_CHANGE as CHANGE,
-  STATE_END as END,
-  STATE_FAIL as FAIL,
+  STATE_WAITING_FOR_CONDITIONS as WAITING_FOR_CONDITIONS,
+  STATE_STARTED as STARTED,
+  STATE_ENDED as ENDED,
+  STATE_FAILED as FAILED,
 } from './constants'
-
-import {
-  POINTER_START
-} from 'touche/input/constants'
 
 let _instanceId = 0;
 
 export default Object.assign({}, evented, {
-  initialize() {
-    evented.initialize.call(this)
-    this.instanceId = ++_instanceId
-    this.reset()
-    return this
-  },
-
   state: READY,
   result: undefined,
   autoreset: true,
+  conditions: [],
 
+  initialize() {
+    evented.initialize.call(this)
+    this.instanceId = ++_instanceId
+    this.conditions = []
+    this.reset()
+    return this
+  },  
   doCheck(input, session) {
+    input = input || this.input
+    session = session || this.session
+
     this.input = input
     this.session = session
 
+    if (this.state & WAITING_FOR_CONDITIONS) {
+      this.start()
+    }
+    
     if (this.preCheck(input, session)) {
       this.check(input, session)
       this.postCheck(input, session)
-    } else {
-      console.log('NOT CHECK')
-    }
-
+    }    
     return this
   },
   preCheck(input, session) {
@@ -44,7 +46,7 @@ export default Object.assign({}, evented, {
       {state} = this,
       {isLast, isFirst} = input
     
-    if (state & (PROCESSING | CHANGE | END)) {
+    if (state & (PROCESSING | STARTED | WAITING_FOR_CONDITIONS | ENDED)) {
       return true
     }
 
@@ -55,30 +57,31 @@ export default Object.assign({}, evented, {
 
     return false
   },
-
   postCheck(input, session) {
-    if (input.isLast && this.state & (CHANGE)) {
+    if (input.isLast && this.state & (STARTED)) {
       this.end()
       return false
     }
   },
-  check() {
-  },
+  check() {},
   reset() {
     this.setState(READY)
     this.result = undefined
     this.trigger('reset')
     return this
   },
-  change(data = {}) {
-    this.setState(CHANGE)
-    this.setResult(data)
-    this.trigger('change', data)
+  start(data = {}) {
+    const canStart = this.conditions.every(fn => fn())
+    if (!canStart) {
+      this.setState(WAITING_FOR_CONDITIONS)
+    } else {
+      this.setState(STARTED)
+      this.trigger('start', data)
+    }
     return this
   },
   end() {
-    console.log('END')
-    this.setState(END)
+    this.setState(ENDED)
     this.trigger('end')
     if (this.autoreset) {
       this.reset()
@@ -86,21 +89,11 @@ export default Object.assign({}, evented, {
     return this
   },
   fail() {
-    this.setState(FAIL)
+    this.setState(FAILED)
     this.trigger('fail')
     if (this.autoreset) {
       this.reset()
     }
-    return this
-  },
-  setResult(data) {
-    Object.assign(data, {
-      event: this.options.event,
-      gesture: this,
-      input: this.input,
-      session: this.session,
-    })
-    this.result = data
     return this
   },
   setState(state) {
@@ -110,10 +103,16 @@ export default Object.assign({}, evented, {
   isProcessing() {
     return this.state & PROCESSING
   },
-  isChange() {
-    return this.state & CHANGE
+  isStarted() {
+    return this.state & STARTED
   },
-  trigger(event, data) {
-    return evented.trigger.call(this, event, event, this.state, data)
+  isFailed() {
+    return this.state & FAILED
+  },
+  emit(event) {
+    this.trigger('emit', event)
+  },
+  addCondition(fn) {
+    this.conditions.push(fn)
   }
 })

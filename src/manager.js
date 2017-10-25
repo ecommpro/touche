@@ -3,52 +3,36 @@ import calculations from 'touche/calculations'
 
 import createGestureManager from 'touche/gestures/manager'
 import createInputManager from 'touche/input/manager'
-
-import {
-  POINTER_START,
-  POINTER_MOVE,
-  POINTER_END,
-  POINTER_CANCEL,
-} from 'touche/input/constants'
+import createCalculator from 'touche/calculations/calculator'
 
 let _instanceId = 0;
 
 export default () => {
   let instanceId = _instanceId++
 
-  let callback = () => {}
-
-  function emit(data, event, state) {
-    if (event === 'change') {
-      if (data && 'event' in data) {
-        this.trigger(data.event, data)
-      }
-    } else {
-      this.trigger(event, data)
-    }
+  function _trigger(event, ...args) {
+    this.trigger(event, ...args)
   }
+  let trigger
 
-  let _emit = emit
+  const gestureManager = createGestureManager({instanceId})
+    .callback((event, ...args) => {
+      if (event === 'emit') {
+        console.log(args)
+      } else {
+        //console.log(event, JSON.stringify(args))
+      }
+    })
 
-  const
-    gestureManager = createGestureManager({instanceId})
-      .callback((data, event, state) => {
-        callback(data, event, state)
-        _emit(data, event, state)
-      })
+  const calculator = createCalculator()
   
   const inputManager = createInputManager({
     instanceId
-  }).on('input', (input, session) => {
-    if (input.action & (POINTER_END | POINTER_CANCEL)) {
-      gestureManager.process(input, session)
-      _emit(null, 'input')
-      calculations(session, input)
-    } else {
-      calculations(session, input)
-      _emit(null, 'input')
-      gestureManager.process(input, session)
-    }
+  })
+  .on('beforeinput', () => trigger('beforeinput'))
+  .on('input', (input, session) => {
+    calculator.process(input, session)
+    gestureManager.process(input, session)
   })
 
   const manager = Object.assign({}, evented, {
@@ -63,15 +47,8 @@ export default () => {
       inputManager.add(input)
       return this
     },
-    
-    callback(fn) {
-      callback = fn
-      return this
-    }
   }).initialize()
 
-  _emit = emit.bind(manager)
-
+  trigger = _trigger.bind(manager)
   return manager
-
 }

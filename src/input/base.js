@@ -19,6 +19,7 @@ export default function({callback = () => {}}) {
       return this
     },
     _handler(ev) {
+      // TODO: remove this
       stopEvent(ev)
       this.ev = ev
       this.handler(ev)
@@ -42,13 +43,14 @@ export default function({callback = () => {}}) {
       } else if (action & (POINTER_END | POINTER_CANCEL)) {
         delete ownPointers[id]
       }
-  
+
+      /*
       if (action === POINTER_MOVE && lastx === x && lasty === y) {
         return false
-      }
-      
+      }      
       lastx = x
       lasty = y
+      */
 
       callback(inputData)
       

@@ -39,14 +39,27 @@
     
 <script src="/dist/touche.js"></script>
 <script>
+
   var doubletap = touche.gestures.tap({
     event: 'doubletap',
     taps: 2
   });
-  
+
+  var tap = touche.gestures.tap()
+
+  tap.addCondition(function() {
+    return doubletap.isFailed()
+  })
+
+  doubletap.on('fail', function() {
+    tap.doCheck({})
+  })
+
   touche(document)
+    //.addGesture(touche.gestures.filter(tap, doubletap).lastSuccessful())
     .addGesture(doubletap)
-    .callback(function(data) {
+    .addGesture(tap)
+    .on(function(data) {
       console.log(data)
     });
 </script>
