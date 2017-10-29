@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="description" content="Touché JS Demos.">
-  <meta name="keywords" content="HTML, CSS, JS, JavaScript, image cropping, cropper, solidocropper, solido cropper, canvas, svg, dom, front-end, web development">
+  <meta name="keywords" content="touche, js, javascript, touch, mouse, pointer, events, gestures">
   <meta name="author" content="Manel R. Doménech">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
@@ -15,8 +15,8 @@
         <!-- <h1 class="title">Touché<span class="js">js</span><img class="logo" src="touche.svg" /></h1> -->
         <h1 class="title">
           <span class="logo-wrapper">
-            <div class="virtualpointer"><img class="virtualpointer" src="virtualpointer.png" /></div>
-            <img class="logo" src="touche7.svg" />
+            <!-- <div class="virtualpointer"><img class="virtualpointer" src="images/virtualpointer.png" /></div> -->
+            <img class="logo" src="images/touche8.svg" />
           </span>
         </h1>
 
@@ -56,34 +56,33 @@
 </script>
 
 <script src="/dist/touche.js"></script>
-<script src="examples-util.js"></script>
-<script src="examples.js"></script>
+<script src="js/examples-util.js"></script>
+<script src="js/examples.js"></script>
 <script>
-
-exampleTapDoubleTap();
-exampleTap();
-examplePan();
-//examplePanWithThreshold();
-exampleVirtualPointers();
-//examplePanWithInertia();
-examplePress();
-exampleSwipe();
-examplePinch();
-exampleRotate();
-exampleDoubleTap();
-exampleTapPress();
-exampleNTap();
-
-/*
-Example('2 Finger: Tap');
-Example('2 Finger: N Tap');
-Example('2 Finger: Tap, Double Tap and Press');
-Example('Nested Pan');
-Example('Rotate with Inertia and Virtual Pointer');
-Example('Pan / Rotate / Pinch');
-Example('Virtual Elements (canvas)');
-*/
+touche.examples = []
 </script>
+
+
+<script src="js/tap.js"></script>
+<script src="js/tap-doubletap.js"></script>
+<script src="js/ntap.js"></script>
+<script src="js/swipe.js"></script>
+<script src="js/press.js"></script>
+<script src="js/pan.js"></script>
+<script src="js/virtualpointer.js"></script>
+<script src="js/pinch-vp.js"></script>
+<script src="js/rotate-vp.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    touche.examples.forEach(function(example) {
+
+      var el = Example(example.title);
+      example.go(el)
+    })
+  })
+</script>
+
 
 </body>
 </html>

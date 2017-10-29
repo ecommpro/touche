@@ -28,7 +28,7 @@ export default function({el}) {
     filters.push(touchMouseFilter())
   }
 
-  //filters.push(preventSafariZoomFilter(400))
+  filters.push(preventSafariZoomFilter(400))
 
   return {
     _filterCallback(inputData) {

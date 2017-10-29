@@ -42,7 +42,9 @@ export default ({
     let pointer, session, hash
 
     const gid = `${id}:${pointerType}:${device}`
-    
+
+    //console.log(instanceId, action, gid)
+
     if (action === POINTER_START) {
       hash = getSessionHash()
       sessionHashForPointer[gid] = hash
@@ -68,6 +70,10 @@ export default ({
       session.pointers.push(pointer)
       session.npointers++
       npointers++
+
+      if (session.npointers > 1) {
+        input.stopEvent()
+      }
 
       if (session.npointers > session.npointersMax) {
         session.npointersMax = session.npointers

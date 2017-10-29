@@ -12,6 +12,7 @@ export default function({
   callback
 }) {
   let npointers = 0
+  let ownPointers = {}
 
   const base = baseInput({callback})
 
@@ -21,18 +22,25 @@ export default function({
     windowEvent: undefined,
 
     handle(data) {
-      let {action} = data
+      let {action, id, pointerType, device} = data
+      const gid = `${id}:${pointerType}:${device}`
 
       if (action & POINTER_START) {
+        ownPointers[gid] = true
         if (npointers <= 0) {
           this.attachToWindow()
         }
         npointers++
       } else if (action & (POINTER_END | POINTER_CANCEL)) {
-        npointers--
-        if (npointers <= 0) {
-          this.detachFromWindow()
+
+        if (gid in ownPointers) {
+          npointers--
+          if (npointers <= 0) {
+            this.detachFromWindow()
+          }
+          delete ownPointers[gid]
         }
+
       }
       return base.handle.call(this, data)
     },

@@ -12,6 +12,7 @@ export default ({instanceId}) => {
       gestures.push(
         gesture
           .onall((event, ...args) => {
+            //console.log(event, args)
             /*
             if (event === 'fail') {
               process()
@@ -22,8 +23,8 @@ export default ({instanceId}) => {
       )
     },
 
-    process(input, session) {
-      process(input, session)
+    process(input, session, calculator) {
+      process(input, session, calculator)
     },
 
     callback(fn) {

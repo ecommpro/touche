@@ -46,12 +46,8 @@ export default (options = {}) => {
         timeout = setTimeout(() => {
           timedout = true
           if (okPointers) {
+            this.start()
             this.emit(event)
-            /*
-            this.change({
-              pointers: pointersGoal
-            })
-            */
             this.end()
           } else {
             this.fail()

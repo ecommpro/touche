@@ -15,16 +15,15 @@ export default () => {
   }
   let trigger
 
-  const gestureManager = createGestureManager({instanceId})
-    .callback((event, ...args) => {
-      if (event === 'emit') {
-        console.log(args)
-      } else {
-        //console.log(event, JSON.stringify(args))
-      }
-    })
 
   const calculator = createCalculator()
+
+  const gestureManager = createGestureManager({instanceId})
+  .callback((event, ...args) => {
+    if (event === 'emit') {
+      trigger(...args)
+    }
+  })
   
   const inputManager = createInputManager({
     instanceId
@@ -32,7 +31,7 @@ export default () => {
   .on('beforeinput', () => trigger('beforeinput'))
   .on('input', (input, session) => {
     calculator.process(input, session)
-    gestureManager.process(input, session)
+    gestureManager.process(input, session, calculator)
   })
 
   const manager = Object.assign({}, evented, {

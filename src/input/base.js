@@ -20,17 +20,19 @@ export default function({callback = () => {}}) {
     },
     _handler(ev) {
       // TODO: remove this
-      stopEvent(ev)
+      //stopEvent(ev)
       this.ev = ev
       this.handler(ev)
     },
-    handle(inputData) {      
+    handle(inputData) {
       Object.assign(inputData, {
         device: this.inputType,
         srcEvent: this.ev,
         target: this.ev.target,
         stopEvent() {
-          stopEvent(this.event)
+          if (this.srcEvent) {
+            stopEvent(this.srcEvent)
+          }
         }
       })
 

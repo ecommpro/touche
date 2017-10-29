@@ -5,6 +5,10 @@ import {
   POINTER_END as END,
 } from '../input/constants'
 
+import {
+  STATE_WAITING_FOR_CONDITIONS as WAITING_FOR_CONDITIONS,
+} from './constants'
+
 const defaults = {
   event: 'tap',
   pointers: 1,
@@ -40,13 +44,14 @@ export default (options = {}) => {
       const
         self = this,
         {action} = input,
-        {npointers, calculations: { deltax, deltay }} = session,
+        {npointers} = session,
+        {deltaX, deltaY} = input,
         {threshold} = options,
         {abs} = Math,
         okTaps = taps === tapsGoal,
-        okMovement = threshold === 0 || (abs(deltax) < threshold && abs(deltay) < threshold)
+        okMovement = threshold === 0 || (abs(deltaX) < threshold && abs(deltaY) < threshold)
 
-      if (action & START) {
+      if (action & START && okMovement) {
         clearTimeout(failTimeout)
         failTimeout = setTimeout(() => self.fail(), options.failTimeout)
 
@@ -57,7 +62,7 @@ export default (options = {}) => {
         okPointers = npointers === pointersGoal
       }
 
-      if (action & END) {
+      if (action & END && okMovement) {
         if (!autodetectPointers && !okPointers) {
           return this.fail()
         }
@@ -68,23 +73,24 @@ export default (options = {}) => {
         }
   
         if (okPointers && npointers === 0) {
-          taps++
+          if (this.state & ~WAITING_FOR_CONDITIONS) {
+            taps++
+          }
+
           okPointers = false
 
           clearTimeout(failTimeout)
           clearTimeout(intervalTimeout)
-          intervalTimeout = setTimeout(checkInterval, options.interval)
 
           if (!autodetectTaps && taps === options.taps) {
             this.start()
+          } else {
+            intervalTimeout = setTimeout(checkInterval, options.interval)
           }
         }
       }
 
-      if (this.isStarted()) {
-        this.emit(event)
-        return this.end()
-      }
+      this.tryEnd()
 
     },
     reset() {
@@ -98,21 +104,23 @@ export default (options = {}) => {
     },
     fail() {
       return base.fail.call(this)
+    },
+    tryEnd() {
+      if (this.isStarted()) {
+        this.result = {
+          taps: taps,
+          pointers: pointersGoal
+        }
+        this.emit(event)
+        return this.end()
+      }
     }
   })
 
   checkInterval = function() {
     if (autodetectTaps) {
-      this.emit(event)
-
-      /*
-      this.change({
-        taps: taps,
-        pointers: pointersGoal
-      })
-      */
-
-      this.end()
+      this.start()
+      this.tryEnd()
     } else {
       this.fail()
     }

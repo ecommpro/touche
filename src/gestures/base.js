@@ -24,20 +24,22 @@ export default Object.assign({}, evented, {
     this.reset()
     return this
   },  
-  doCheck(input, session) {
+  doCheck(input, session, calculator) {
     input = input || this.input
     session = session || this.session
+    calculator = calculator || this.calculator
 
     this.input = input
     this.session = session
+    this.calculator = calculator
 
     if (this.state & WAITING_FOR_CONDITIONS) {
       this.start()
     }
     
-    if (this.preCheck(input, session)) {
-      this.check(input, session)
-      this.postCheck(input, session)
+    if (this.preCheck(input, session, calculator)) {
+      this.check(input, session, calculator)
+      this.postCheck(input, session, calculator)
     }    
     return this
   },
@@ -72,6 +74,9 @@ export default Object.assign({}, evented, {
   },
   start(data = {}) {
     const canStart = this.conditions.every(fn => fn())
+
+    //console.log(this.options.event, 'canStart', canStart)
+    
     if (!canStart) {
       this.setState(WAITING_FOR_CONDITIONS)
     } else {
@@ -81,6 +86,7 @@ export default Object.assign({}, evented, {
     return this
   },
   end() {
+    //console.log(this.options.event, 'END')
     this.setState(ENDED)
     this.trigger('end')
     if (this.autoreset) {
@@ -89,6 +95,7 @@ export default Object.assign({}, evented, {
     return this
   },
   fail() {
+    //console.log(this.options.event, 'FAIL')
     this.setState(FAILED)
     this.trigger('fail')
     if (this.autoreset) {
@@ -110,7 +117,7 @@ export default Object.assign({}, evented, {
     return this.state & FAILED
   },
   emit(event) {
-    this.trigger('emit', event)
+    this.trigger('emit', event, this.result, this.input, this.session, this.calculator)
   },
   addCondition(fn) {
     this.conditions.push(fn)
