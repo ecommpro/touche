@@ -30,6 +30,7 @@ export default () => {
   })
   .on('beforeinput', () => trigger('beforeinput'))
   .on('input', (input, session) => {
+    trigger('touche', input)
     calculator.process(input, session)
     gestureManager.process(input, session, calculator)
   })

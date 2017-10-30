@@ -45,14 +45,9 @@ export default (options = {}) => {
         okPointers = npointersMax >= options.pointers,
         okVelocity = abs(velocity) >= options.velocity
 
-        console.log(abs(velocity), options.velocity)
-
       thresholdReached = thresholdReached || abs(deltaX) > threshold || abs(deltaY) > threshold
 
       if (input.isLast && okPointers && thresholdReached) {
-        
-        console.log(input.action, input.isLast)
-
         if (okVelocity) {
           this.emit(`${event}`)
           this.emit(`${event}${direction}`)

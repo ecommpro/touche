@@ -3,8 +3,8 @@ export default ({instanceId}) => {
   let gestures = []
   let callback = () => {}
 
-  function process(input, session) {
-    gestures.forEach(gesture => gesture.doCheck(input, session))
+  function process(input, session, calculator) {
+    gestures.forEach(gesture => gesture.doCheck(input, session, calculator))
   }
 
   return {

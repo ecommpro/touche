@@ -107,10 +107,12 @@ export default () => {
       let velocityMax = maxabs(global.velocity.x, global.velocity.y)
       // REVIEW THIS. WE NEED A BETTER WAY TO DO IT
       Object.assign(input, {
+        centerX: center.x,
+        centerY: center.y,
         deltaX: global.position.x,
         deltaY: global.position.y,
         scale: global.scale,
-        rotation: radToDeg(global.rotation),
+        rotation: radToDeg(-global.rotation),
         velocityX: global.velocity.x,
         velocityY: global.velocity.y,
         velocity: velocityMax,

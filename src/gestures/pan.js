@@ -54,13 +54,6 @@ export default (options = {}) => {
 
       if (input.action & POINTER_MOVE && this.isStarted()) {
         this.emit(`${event}move`)
-        /*
-        this.change({
-          pointers: npointers,
-          x: deltax,
-          y: deltay
-        })
-        */
       }
 
       if (this.state & STARTED && input.isLast) {

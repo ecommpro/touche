@@ -19,8 +19,6 @@ export default function({callback = () => {}}) {
       return this
     },
     _handler(ev) {
-      // TODO: remove this
-      //stopEvent(ev)
       this.ev = ev
       this.handler(ev)
     },

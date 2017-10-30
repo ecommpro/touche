@@ -10,7 +10,7 @@ touche.examples.push({
         taps: 0
       }))
       .on('ntap', flogevent(el, function(data) {
-        return(data.taps + '-tap ' + data.pointers + '-pointers');
+        return(data.taps + ' tap, ' + data.pointers + ' fingers');
       }))    
     ;
   }

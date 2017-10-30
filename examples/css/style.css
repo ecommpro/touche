@@ -33,10 +33,10 @@
   .example h2 {
     text-align: center;
     padding: 15px;
-    background: #5ba7ff;
+    /*background: #5ba7ff;*/
     font-weight: normal;
     font-size: 1.2em;
-    color: #fff;
+    /*color: #fff;*/
   }
 
   header {
@@ -119,7 +119,8 @@
     width: 100%;
     padding-bottom: 100%;
     background: #fff;
-    border: 1px solid #5ba7ff;
+    /*border: 1px solid #5ba7ff;*/
+    
     position: relative;
   }
 
@@ -138,6 +139,8 @@
     width: 100%;
     height: 100%;
     overflow:hidden;
+
+    border: 3px solid #e1efff;
   }
 
   .touchable .event {
@@ -152,6 +155,9 @@
     background-color: #e1efff;
     transform: scale(1.0);
     transition: background-color 200ms linear, transform 200ms linear;
+
+    text-transform: uppercase;
+    font-size: .8em;
   }
 
   footer {
@@ -247,7 +253,6 @@
     background: linear-gradient(to right, #fff, #5ba7ff, #fff);
     display: table;
     padding: 0 50%;
-    font-size: 2em;
   }
 
   .panner p {

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="Touché JS Demos.">
+  <meta name="keywords" content="touche, js, javascript, touch, mouse, pointer, events, gestures">
+  <meta name="author" content="Manel R. Doménech">
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+#viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+#box {
+  position: absolute;
+  background: radial-gradient(#fff, #5ba7ff);
+  width: 50%;
+  height: 50%;
+  top: 25%;
+  left: 25%;
+}
+
+.handle {
+  background: #000;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+}   
+.handle.nw {
+    left: 0;
+    top: 0;
+}   
+.handle.ne {
+    right: 0;
+    top: 0;
+}   
+.handle.se {
+    right: 0;
+    bottom: 0;
+}       
+.handle.sw {
+    left: 0;
+    bottom: 0;
+}           
+  </style>
+</head>
+<body>
+
+  <div id="viewport">
+    <div id="box">
+      <div class="handle nw"></div>
+      <div class="handle ne"></div>
+      <div class="handle se"></div>
+      <div class="handle sw"></div>
+    </div>
+  </div>
+
+<script src="/dist/touche.js"></script>
+
+<script>
+var
+  pan = touche.gestures.pan(),
+  pinch = touche.gestures.pinch(),
+  rotate = touche.gestures.rotate()
+;
+
+var el = document.getElementById('viewport');
+var box = document.getElementById('box');
+
+var
+  scale = 1,
+  rotation = 0,
+  tx = 0,
+  ty = 0
+;
+
+function refresh() {
+  var _translate = 'translate(' + tx + 'px, ' + ty + 'px) ';
+  var _rotate = 'rotate(' + rotation +'deg) ';
+  var _scale = 'scale(' + scale + ') ';
+  var transform = _translate + _scale + _rotate;
+
+  box.style.transform = transform;
+  box.style["transform-origin"] = 'center center';
+}
+
+touche(el)
+  .addGesture(pan)
+  .addGesture(pinch)
+  .addGesture(rotate)
+  .on('touche', function(input) {
+    input.stopEvent();
+  })
+  .on('panmove', function(result, input, session, calculator) {
+    tx = input.deltaX;
+    ty = input.deltaY;
+    refresh();
+  })  
+  .on('rotatemove', function(result, input, session, calculator) {
+    rotation = input.rotation;
+    refresh();
+  })
+  .on('pinchmove', function(result, input, session, calculator) {
+    scale = input.scale;
+    refresh();
+  })
+  ;
+ 
+</script>
+
+
+</body>
+</html>

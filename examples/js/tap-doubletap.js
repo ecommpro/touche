@@ -11,12 +11,10 @@ touche.examples.push({
     var tap = touche.gestures.tap()
   
     tap.addCondition(function() {
-      //console.log('doubletap state', doubletap.state)
       return doubletap.isFailed()
     })
   
     doubletap.on('fail', function() {
-      //console.log('NEW CHECK ---')
       tap.doCheck({})
     })
 

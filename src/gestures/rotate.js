@@ -51,11 +51,6 @@ export default (options = {}) => {
       
       if (input.action & POINTER_MOVE && this.isStarted()) {
         this.emit(`${event}move`)
-        /*
-        this.change({
-          angle: -rotation,
-        })
-        */
       }
 
       if (this.isStarted() && input.isLast) {
