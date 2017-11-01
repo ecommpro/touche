@@ -27,10 +27,10 @@
 }
 
 .handle {
-  background: #000;
+  /*background: #000;*/
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 0px;
+  height: 0px;
 }   
 .handle.nw {
     left: 0;
@@ -54,10 +54,6 @@
 
   <div id="viewport">
     <div id="box">
-      <div class="handle nw"></div>
-      <div class="handle ne"></div>
-      <div class="handle se"></div>
-      <div class="handle sw"></div>
     </div>
   </div>
 
@@ -73,42 +69,74 @@ var
 var el = document.getElementById('viewport');
 var box = document.getElementById('box');
 
+
 var
   scale = 1,
   rotation = 0,
   tx = 0,
-  ty = 0
+  ty = 0,
+  cx = 0,
+  cy = 0
 ;
 
-function refresh() {
-  var _translate = 'translate(' + tx + 'px, ' + ty + 'px) ';
-  var _rotate = 'rotate(' + rotation +'deg) ';
-  var _scale = 'scale(' + scale + ') ';
-  var transform = _translate + _scale + _rotate;
+var bounds = box.getBoundingClientRect();
 
+var adjustx = 0, adjusty = 0;
+
+function refresh() {
+  var vx = cx - bounds.left;
+  var vy = cy - bounds.top;
+
+  var transforms = [
+    'translate(' + (vx) + 'px, ' + (vy) + 'px)',
+    'rotate(' + rotation +'deg)',
+    'translate(' + (-vx) + 'px, ' + (-vy) + 'px)',
+
+    'translate(' + (vx) + 'px, ' + (vy) + 'px)',
+    'scale(' + scale + ')',
+    'translate(' + (-vx) + 'px, ' + (-vy) + 'px)',
+
+    'translate(' + (tx) + 'px, ' + (ty) + 'px)'
+  ];
+
+  var transform = transforms.join(" ");
+  var origin = (vx) + 'px ' + (vy) + 'px';
+  
   box.style.transform = transform;
-  box.style["transform-origin"] = 'center center';
+  box.style["transform-origin"] = '0 0';
+
+  //console.log(origin)
 }
 
 touche(el)
   .addGesture(pan)
   .addGesture(pinch)
   .addGesture(rotate)
-  .on('touche', function(input) {
+  .on('touche.input', function(input) {
     input.stopEvent();
   })
   .on('panmove', function(result, input, session, calculator) {
     tx = input.deltaX;
     ty = input.deltaY;
-    refresh();
   })  
   .on('rotatemove', function(result, input, session, calculator) {
     rotation = input.rotation;
-    refresh();
   })
   .on('pinchmove', function(result, input, session, calculator) {
     scale = input.scale;
-    refresh();
+  })
+  .on('touche.recentered', function(v, input) {
+    console.log(v)
+
+    console.log(cx, cy, ' --- ', input.centerX, input.centerY);
+
+    adjustx += v.x;
+    adjusty += v.y;
+  })
+  .on('touche.post', function(input) {
+    cx = input.centerX;
+    cy = input.centerY;
+    refresh();    
   })
   ;
  

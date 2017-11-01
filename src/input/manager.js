@@ -32,7 +32,6 @@ export default ({
   }
 
   const callback = function(input) {
-    
     // TODO: WE NEED A BETTER CHECK
     if (input.device !== 'virtual') {
       this.trigger('beforeinput', input)
@@ -86,8 +85,10 @@ export default ({
           input.distance = pointer.distance
           break
   
-        case POINTER_END:
         case POINTER_CANCEL:
+          console.log('CANCEL!')
+
+        case POINTER_END:
           let index = session.pointers.indexOf(pointer)
           session.pointers.splice(index, 1)
 

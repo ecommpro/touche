@@ -28,7 +28,7 @@
         pointer.move(rect.left, rect.top);
       })
       .on('rotatemove', function(data, input) {
-        shape.style.transform = 'rotate(' + (-input.rotation) + 'deg)';
+        shape.style.transform = 'rotate(' + (input.rotation) + 'deg)';
       });
       
       pointer.start();

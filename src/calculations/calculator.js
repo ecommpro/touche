@@ -24,14 +24,18 @@ export default () => {
     velocity: {x: 0, y: 0}
   }
 
-  let global = {}
-
-  let orig = {}
-  let recenter = {}
-  let last = {}
+  let
+    global = {},
+    orig = {},
+    recenter = {},
+    last = {},
+    recentered,
+    newCenterDelta
 
   return {
     process(input, session) {
+
+      recentered = false
       
       const { action } = input
       const { pointers } = session
@@ -53,10 +57,18 @@ export default () => {
         global.t = now
         last.t = now
         last.center = center
+        recenter.center = center
       }
 
       if (input.action & ~POINTER_MOVE) {
         recenter.pointers = clonePointers(pointers)
+
+        // TODO: use this to adjst CSS transformations
+        newCenterDelta = sub2d(recenter.center, center)
+        recentered = true
+
+        //console.log(newCenterDelta)
+
         recenter.center = center
         recenter.distance = distance
 
@@ -118,6 +130,12 @@ export default () => {
         velocity: velocityMax,
         direction: global.direction
       })
+
+      return {
+        recentered,
+        newCenterDelta
+      }
+
     }
   }
 

@@ -23,6 +23,14 @@ export default function({callback = () => {}}) {
       this.handler(ev)
     },
     handle(inputData) {
+
+      // TODO: BACK TO THIS
+      /*
+      if (inputData.action & POINTER_MOVE && lastx === x && lasty === y) {
+        return false
+      }
+      */
+
       Object.assign(inputData, {
         device: this.inputType,
         srcEvent: this.ev,
@@ -35,22 +43,18 @@ export default function({callback = () => {}}) {
       })
 
       let {device, action, pointerType, id, x, y, event} = inputData
+      const pid = '' + id
 
-      if (action & POINTER_START) {
-        ownPointers[id] = true
-      } else if (!(id in ownPointers)) {
+      if (action & POINTER_START) {        
+        ownPointers[pid] = true
+      } else if (!(pid in ownPointers)) {
         return false
       } else if (action & (POINTER_END | POINTER_CANCEL)) {
-        delete ownPointers[id]
+        delete ownPointers[pid]
       }
 
-      /*
-      if (action === POINTER_MOVE && lastx === x && lasty === y) {
-        return false
-      }      
       lastx = x
       lasty = y
-      */
 
       callback(inputData)
       

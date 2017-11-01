@@ -30,9 +30,13 @@ export default () => {
   })
   .on('beforeinput', () => trigger('beforeinput'))
   .on('input', (input, session) => {
-    trigger('touche', input)
-    calculator.process(input, session)
+    trigger('touche.input', input)
+    const result = calculator.process(input, session)
+    if (result.recentered) {
+      trigger('touche.recentered', result.newCenterDelta, input)
+    }
     gestureManager.process(input, session, calculator)
+    trigger('touche.post', input, session, calculator)
   })
 
   const manager = Object.assign({}, evented, {
