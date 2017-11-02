@@ -30,7 +30,10 @@ export default () => {
     recenter = {},
     last = {},
     recentered,
-    newCenterDelta
+    newCenterDelta,
+    newCenterDelta2,
+    centerMoved,
+    center = {x: 0, y: 0}
 
   return {
     process(input, session) {
@@ -46,7 +49,12 @@ export default () => {
         return
       }*/
       
-      const center = getCenter(pointers)
+      let prevCenter = center
+      center = getCenter(pointers)
+      if (input.isFirst) {
+        prevCenter = center
+      }
+
       const distance = getDistance({
         center,
         pointers
@@ -65,9 +73,14 @@ export default () => {
 
         // TODO: use this to adjst CSS transformations
         newCenterDelta = sub2d(recenter.center, center)
+        centerMoved = sub2d(prevCenter, center)
+
+        newCenterDelta2 = sub2d(recenter.center, prevCenter)
+
         recentered = true
 
-        //console.log(newCenterDelta)
+        //console.log('newCenterDelta', newCenterDelta)
+        //console.log('centerJustMoved', centerMoved)
 
         recenter.center = center
         recenter.distance = distance
@@ -124,6 +137,7 @@ export default () => {
         deltaX: global.position.x,
         deltaY: global.position.y,
         scale: global.scale,
+        rotationRad: -global.rotation,
         rotation: radToDeg(-global.rotation),
         velocityX: global.velocity.x,
         velocityY: global.velocity.y,
@@ -133,7 +147,11 @@ export default () => {
 
       return {
         recentered,
-        newCenterDelta
+        newCenterDelta,
+        newCenterDelta2,
+        centerMoved,
+        center,
+        prevCenter
       }
 
     }

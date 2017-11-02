@@ -33,7 +33,7 @@ export default () => {
     trigger('touche.input', input)
     const result = calculator.process(input, session)
     if (result.recentered) {
-      trigger('touche.recentered', result.newCenterDelta, input)
+      trigger('touche.recentered', result, input, session)
     }
     gestureManager.process(input, session, calculator)
     trigger('touche.post', input, session, calculator)
