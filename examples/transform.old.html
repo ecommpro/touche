@@ -20,11 +20,22 @@
 #box {
   position: absolute;
   background: radial-gradient(#fff, #5ba7ff);
-  top: 0%;
-  left: 0%;
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
+  top: 0;
+  left: 0;
 }
+
+#center {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #000;
+  margin-left: -5px;
+  margin-top: -5px;
+}
+
+
   </style>
 </head>
 <body>
@@ -32,6 +43,8 @@
   <div id="viewport">
     <div id="box">
     </div>
+
+    <div id="center"></div>
   </div>
 
 <script src="/dist/touche.js"></script>
@@ -45,6 +58,8 @@ var
 
 var el = document.getElementById('viewport');
 var box = document.getElementById('box');
+var c = document.getElementById('center');
+
 
 var
   scale = 1,
@@ -52,37 +67,40 @@ var
   tx = 0,
   ty = 0,
   cx = 0,
-  cy = 0,
-  pivotx = 0,
-  pivoty = 0
+  cy = 0
 ;
 
-var transform = touche.transform();
-var pivot = touche.transform();
-
-var bounds = box.getBoundingClientRect()
+var bounds = box.getBoundingClientRect();
 
 var adjustx = 0, adjusty = 0;
 
-function refresh() {
-  x = cx;
-  y = cy;
+var lastadjustx, lastadjusty;
 
-  transform
-    .setId()
-    .translate(adjustx, adjusty)
-    .translate(x, y)
-    .rotate(rotation)
-    .scale(scale)
-    .translate(-x, -y)
-    .translate(tx, ty)
-  ;
-    
-  box.style['transform-origin'] = '0 0';
-  box.style.transform = transform.toCSS3MatrixString();
+function refresh() {
+  var vx = cx - bounds.left;
+  var vy = cy - bounds.top;
+
+  var transforms = [
+    'rotate(' + rotation +'deg)',
+    'scale(' + scale + ')',    
+    'translate(' + (tx + adjustx) + 'px, ' + (ty + adjusty) + 'px)',
+  ];
+
+  var transform = transforms.join(" ");
+  var origin = (vx) + 'px ' + (vy) + 'px';
+  
+  box.style.transform = transform;
+  box.style["transform-origin"] = origin;
+
+  c.style.left = cx + 'px';
+  c.style.top = cy + 'px';
 }
 
+var virtualInput = touche.input.virtual();
+var pointer = virtualInput.pointer(1)
+
 touche(el)
+  .addInput(virtualInput)
   .addGesture(pan)
   .addGesture(pinch)
   .addGesture(rotate)
@@ -94,12 +112,17 @@ touche(el)
     ty = input.deltaY;
   })  
   .on('rotatemove', function(result, input, session, calculator) {
-    rotation = input.rotationRad;
+    rotation = input.rotation;
   })
   .on('pinchmove', function(result, input, session, calculator) {
     scale = input.scale;
   })
-  .on('touche.recentered', function(result, input, session) {
+  .on('touche.recentered', function(result, input) {
+    var v = result.newCenterDelta2;
+    console.log(v);
+    //var v = result.centerMoved;    
+    //adjustx = v.x;
+    //adjusty = v.y;
   })
   .on('touche.post', function(input) {
     cx = input.centerX;
@@ -107,6 +130,9 @@ touche(el)
     refresh();    
   })
   ;
+
+  pointer.start();
+ 
 </script>
 
 
