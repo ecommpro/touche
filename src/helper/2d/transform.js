@@ -13,7 +13,7 @@ export default () => {
 
     copy(object) {
       let m = object.getMatrix();
-      this.setMatrix(m);
+      return this.setMatrix(m);
     },
 
     invert() {
@@ -112,6 +112,11 @@ export default () => {
 
     getTranslationY() {
       return this.m[5];
+    },
+
+    setTranslation(x, y) {
+      this.m[4] = x;
+      this.m[5] = y;
     },
 
     getRotation() {
