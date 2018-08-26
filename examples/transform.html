@@ -12,16 +12,16 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  bottom: 0;
+  right: 0;
   touch-action: none;
 }
 
 #box {
   position: absolute;
   background: radial-gradient(#fff, #5ba7ff);
-  top: 0%;
-  left: 0%;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
 }
@@ -51,14 +51,14 @@ var
   rotation = 0,
   tx = 0,
   ty = 0,
-  cx = 0,
-  cy = 0,
+  cx = false,
+  cy = false,
   pivotx = 0,
   pivoty = 0
 ;
 
 var transform = touche.transform();
-var pivot = touche.transform();
+var rs = touche.transform();
 
 var bounds = box.getBoundingClientRect()
 
@@ -68,13 +68,21 @@ function refresh() {
   x = cx;
   y = cy;
 
+  rs
+    .setId()
+    .rotate(rotation)
+    .scale(scale)
+  ;
+
+  var tadjust = rs.transformPoint(adjustx, adjusty);
+
   transform
     .setId()
     .translate(adjustx, adjusty)
     .translate(x, y)
-    .rotate(rotation)
-    .scale(scale)
+    .multiply(rs)
     .translate(-x, -y)
+    .translate(-adjustx, -adjusty)
     .translate(tx, ty)
   ;
     
@@ -92,19 +100,47 @@ touche(el)
   .on('panmove', function(result, input, session, calculator) {
     tx = input.deltaX;
     ty = input.deltaY;
+    console.log(tx, ty);
   })  
   .on('rotatemove', function(result, input, session, calculator) {
     rotation = input.rotationRad;
   })
   .on('pinchmove', function(result, input, session, calculator) {
     scale = input.scale;
+    //console.log(scale);
+
   })
   .on('touche.recentered', function(result, input, session) {
+
+    if (isNaN(input.centerX)) {
+      cx = false;
+      cy = false;
+      return;
+    }
+
+    if (cx === false || isNaN(cx)) {
+      cx = input.centerX;
+      cy = input.centerY;
+    }
+
+    adjustx += cx - input.centerX;
+    adjusty += cy - input.centerY;
+
+    console.log('recenter', adjustx, adjusty);
+
   })
   .on('touche.post', function(input) {
+    
     cx = input.centerX;
     cy = input.centerY;
-    refresh();    
+
+    if (isNaN(cx)) {
+      return;
+    }
+
+    console.log('center', cx, cy);
+
+    refresh();
   })
   ;
 </script>
