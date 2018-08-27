@@ -1,6 +1,4 @@
 import evented from 'touche/mixins/evented'
-import calculations from 'touche/calculations'
-
 import createGestureManager from 'touche/gestures/manager'
 import createInputManager from 'touche/input/manager'
 import createCalculator from 'touche/calculations/calculator'

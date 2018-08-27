@@ -68,6 +68,10 @@ export default () => {
         recenter.center = center
       }
 
+      let deltaposition;
+      let deltarotation;
+      let deltascale;
+
       if (input.action & ~POINTER_MOVE) {
         recenter.pointers = clonePointers(pointers)
 
@@ -88,20 +92,25 @@ export default () => {
         orig.position = global.position
         orig.scale = global.scale
         orig.rotation = global.rotation
+
+        deltaposition = [0, 0]
+        deltarotation = 0
+        deltascale = 1
+
       } else {
         const deltat = (now - global.t) || 1
         const dt = (now - last.t) || 1
         
-        const deltaposition = sub2d(center, recenter.center)
-  
-        const deltarotation = getRotation({
+        deltaposition = sub2d(center, recenter.center)  
+        
+        deltarotation = getRotation({
           center0: recenter.center,
           pointers0: recenter.pointers,
           center,
           pointers
         })
-  
-        const deltascale = recenter.distance > 0 ? distance / recenter.distance : 1
+
+        deltascale = recenter.distance > 0 ? distance / recenter.distance : 1
   
         global.position = sum2d(orig.position, deltaposition)
         global.rotation = orig.rotation + deltarotation
@@ -142,7 +151,11 @@ export default () => {
         velocityX: global.velocity.x,
         velocityY: global.velocity.y,
         velocity: velocityMax,
-        direction: global.direction
+        direction: global.direction,
+        deltaPosition: deltaposition,
+        deltaScale: deltascale,
+        deltaRotation: deltarotation,
+        distance: distance - recenter.distance
       })
 
       return {

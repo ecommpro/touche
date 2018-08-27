@@ -86,8 +86,6 @@ export default ({
           break
   
         case POINTER_CANCEL:
-          console.log('CANCEL!')
-
         case POINTER_END:
           let index = session.pointers.indexOf(pointer)
           session.pointers.splice(index, 1)

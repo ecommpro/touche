@@ -38,12 +38,14 @@ export default (options = {}) => {
         {abs} = Math
       
       const
-        {calculations: { distance }} = session
+        {distance} = input
+
+        console.log(distance);
         
       const
         okPointers = pointers === 0 || npointers === pointers
       
-      thresholdReached = true || thresholdReached || abs(distance) >= threshold
+      thresholdReached = thresholdReached || abs(distance) >= threshold
 
       if (this.isProcessing() && okPointers && thresholdReached) {
         this.start()

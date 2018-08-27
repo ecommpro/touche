@@ -39,8 +39,12 @@
 <script>
 var
   pan = touche.gestures.pan(),
-  pinch = touche.gestures.pinch(),
-  rotate = touche.gestures.rotate()
+  pinch = touche.gestures.pinch({
+    threshold: 0
+  }),
+  rotate = touche.gestures.rotate({
+    threshold: 0
+  })
 ;
 
 var el = document.getElementById('viewport');
@@ -52,13 +56,12 @@ var
   tx = 0,
   ty = 0,
   cx = false,
-  cy = false,
-  pivotx = 0,
-  pivoty = 0
+  cy = false
 ;
 
 var transform = touche.transform();
 var rs = touche.transform();
+var pivot = touche.transform().setId();
 
 var bounds = box.getBoundingClientRect()
 
@@ -78,14 +81,13 @@ function refresh() {
 
   transform
     .setId()
-    .translate(adjustx, adjusty)
     .translate(x, y)
     .multiply(rs)
     .translate(-x, -y)
-    .translate(-adjustx, -adjusty)
     .translate(tx, ty)
+    .multiply(pivot)
   ;
-    
+
   box.style['transform-origin'] = '0 0';
   box.style.transform = transform.toCSS3MatrixString();
 }
@@ -98,47 +100,32 @@ touche(el)
     input.stopEvent();
   })
   .on('panmove', function(result, input, session, calculator) {
-    tx = input.deltaX;
-    ty = input.deltaY;
-    console.log(tx, ty);
+    tx = input.deltaPosition.x;
+    ty = input.deltaPosition.y;
   })  
   .on('rotatemove', function(result, input, session, calculator) {
-    rotation = input.rotationRad;
+    rotation = -input.deltaRotation;
   })
   .on('pinchmove', function(result, input, session, calculator) {
-    scale = input.scale;
-    //console.log(scale);
-
+    scale = input.deltaScale;
   })
   .on('touche.recentered', function(result, input, session) {
+    pivot.copy(transform);
+    scale = 1;
+    rotation = 0;
+    tx = 0;
+    ty = 0;
+  })
+  .on('touche.post', function(input) {
 
     if (isNaN(input.centerX)) {
-      cx = false;
-      cy = false;
       return;
     }
 
-    if (cx === false || isNaN(cx)) {
-      cx = input.centerX;
-      cy = input.centerY;
-    }
-
-    adjustx += cx - input.centerX;
-    adjusty += cy - input.centerY;
-
-    console.log('recenter', adjustx, adjusty);
-
-  })
-  .on('touche.post', function(input) {
-    
     cx = input.centerX;
     cy = input.centerY;
 
-    if (isNaN(cx)) {
-      return;
-    }
-
-    console.log('center', cx, cy);
+    console.log('t', input.deltaPosition, 's', input.deltaScale, 'r', input.deltaRotation);
 
     refresh();
   })
