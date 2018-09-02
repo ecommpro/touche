@@ -72,12 +72,12 @@ touche.examples = []
 <script src="js/virtualpointer.js"></script>
 <script src="js/pinch-vp.js"></script>
 <script src="js/rotate-vp.js"></script>
+<script src="js/transform.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     touche.examples.forEach(function(example) {
-
-      var el = Example(example.title);
+      var el = Example(example.title, example);
       example.go(el)
     })
   })

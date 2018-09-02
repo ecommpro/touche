@@ -63,10 +63,6 @@ var transform = touche.transform();
 var rs = touche.transform();
 var pivot = touche.transform().setId();
 
-var bounds = box.getBoundingClientRect()
-
-var adjustx = 0, adjusty = 0;
-
 function refresh() {
   x = cx;
   y = cy;
@@ -77,7 +73,7 @@ function refresh() {
     .scale(scale)
   ;
 
-  var tadjust = rs.transformPoint(adjustx, adjusty);
+  
 
   transform
     .setId()
