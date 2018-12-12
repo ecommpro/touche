@@ -1,10 +1,10 @@
 import {
   STATE_READY as READY,
   STATE_PROCESSING as PROCESSING,
-  STATE_CHANGE as CHANGE,
+  STATE_CHANGED as CHANGE,
   STATE_OK as OK,
-  STATE_END as END,
-  STATE_FAIL as FAIL,
+  STATE_ENDED as END,
+  STATE_FAILED as FAIL,
 } from './constants'
 
 import lastSuccessful from './filters/lastSuccessful'
