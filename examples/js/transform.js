@@ -2,7 +2,7 @@
   
 touche.examples.push({
 
-title: 'Use your fingers, toes or nose',
+title: 'Multitouch transformation! Use all your fingers, toes or even your nose',
 class: 'wide',
 
 go: function(el) {
