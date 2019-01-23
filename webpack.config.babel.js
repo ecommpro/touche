@@ -32,7 +32,7 @@ export default {
     }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /(\.jsx|\.js)$/,
         loader: 'babel-loader',
@@ -44,5 +44,6 @@ export default {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     //new BundleAnalyzerPlugin()
-  ]
+  ],
+  mode: 'development',
 }
