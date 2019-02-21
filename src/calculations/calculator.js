@@ -30,8 +30,6 @@ export default () => {
     recenter = {},
     last = {},
     recentered,
-    newCenterDelta,
-    newCenterDelta2,
     centerMoved,
     center = {x: 0, y: 0}
 
@@ -43,11 +41,6 @@ export default () => {
       const { action } = input
       const { pointers } = session
       const now = Date.now()
-
-      /*
-      if (input.isLast) {
-        return
-      }*/
       
       let prevCenter = center
       center = getCenter(pointers)
@@ -74,17 +67,8 @@ export default () => {
 
       if (input.action & ~POINTER_MOVE) {
         recenter.pointers = clonePointers(pointers)
-
-        // TODO: use this to adjst CSS transformations
-        newCenterDelta = sub2d(recenter.center, center)
         centerMoved = sub2d(prevCenter, center)
-
-        newCenterDelta2 = sub2d(recenter.center, prevCenter)
-
         recentered = true
-
-        //console.log('newCenterDelta', newCenterDelta)
-        //console.log('centerJustMoved', centerMoved)
 
         recenter.center = center
         recenter.distance = distance
@@ -118,27 +102,10 @@ export default () => {
   
         global.velocity = div2d(global.position, deltat)
         global.direction = getDirection(global.position)
-  
-        // DERIVATIVE dt
-  
-        //const dposition = sub2d(center, last.center)
-        
-        /*
-        const ddistance = hypo(dposition.x, dposition.y)
-        global.distancetraveled += ddistance
-        global.velocitymag = global.distancetraveled / deltat
-        */
-  
-        //last.velocitymag = ddistance / dt
-  
-        //last.direction = getDirection(dposition)
-  
-        //last.t = now
-        //last.center = center
       }
 
-      
       let velocityMax = maxabs(global.velocity.x, global.velocity.y)
+      
       // REVIEW THIS. WE NEED A BETTER WAY TO DO IT
       Object.assign(input, {
         centerX: center.x,
@@ -160,8 +127,6 @@ export default () => {
 
       return {
         recentered,
-        newCenterDelta,
-        newCenterDelta2,
         centerMoved,
         center,
         prevCenter

@@ -40,8 +40,6 @@ export default (options = {}) => {
       const
         {distance} = input
 
-        console.log(distance);
-        
       const
         okPointers = pointers === 0 || npointers === pointers
       

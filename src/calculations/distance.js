@@ -3,11 +3,11 @@ import { sub2d } from '../helper/2d'
 
 export default ({
   center,
-  pointers,  
+  pointers,
 }) => {
-  let smean = 0  
+  let smean = 0
   pointers.forEach(pointer => 
     smean += hypo(pointer.x - center.x, pointer.y - center.y)
   )
-  return smean / pointers.length
+  return pointers.length > 0 ? smean / pointers.length : 0
 }

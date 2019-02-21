@@ -8,10 +8,10 @@ class: 'wide',
 go: function(el) {
 
   var
-    scale,
-    rotation,
-    tx, ty,
-    cx, cy,
+    scale = 1,
+    rotation = 0,
+    tx = 0, ty = 0,
+    cx = 0, cy = 0,
     transform = touche.transform(),
     rs = touche.transform(),
     pivot = touche.transform().setId()
@@ -43,7 +43,7 @@ go: function(el) {
     shape.style['transform-origin'] = '0 0';
     shape.style.transform = transform.toCSS3MatrixString();
   }
-
+  
   touche(el)
     .addGesture(touche.gestures.pan())
     .addGesture(touche.gestures.pinch())
@@ -54,7 +54,7 @@ go: function(el) {
     .on('panmove', function(result, input, session, calculator) {
       tx = input.deltaPosition.x;
       ty = input.deltaPosition.y;
-    })  
+    })
     .on('rotatemove', function(result, input, session, calculator) {
       rotation = -input.deltaRotation;
     })
@@ -68,8 +68,9 @@ go: function(el) {
       tx = 0;
       ty = 0;
     })
-    .on('touche.post', function(input) {
-      if (isNaN(input.centerX)) {
+    .on('touche.post', function(input, session) {
+      
+      if (!session.npointers) {
         return;
       }
 
