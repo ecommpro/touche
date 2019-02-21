@@ -5,7 +5,7 @@ touche.examples.push({
   go: function(el) {
 
     var text = document.createElement('div');
-    text.innerHTML = 'You can create virtual pointers and trigger <em>start</em>, <em>move</em> and <em>end</em> events. Virtual pointers are not visible, but in those examples we will show this image:';
+    text.innerHTML = 'You can create virtual pointers and trigger <em>start</em>, <em>move</em> and <em>end</em> events. Virtual pointers are not visible, but in these examples we will show this image:';
     text.className = 'comment';
 
     el.appendChild(text);

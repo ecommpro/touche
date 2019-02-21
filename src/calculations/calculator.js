@@ -30,7 +30,6 @@ export default () => {
     recenter = {},
     last = {},
     recentered,
-    centerMoved,
     center = {x: 0, y: 0}
 
   return {
@@ -42,12 +41,8 @@ export default () => {
       const { pointers } = session
       const now = Date.now()
       
-      let prevCenter = center
       center = getCenter(pointers)
-      if (input.isFirst) {
-        prevCenter = center
-      }
-
+      
       const distance = getDistance({
         center,
         pointers
@@ -67,7 +62,6 @@ export default () => {
 
       if (input.action & ~POINTER_MOVE) {
         recenter.pointers = clonePointers(pointers)
-        centerMoved = sub2d(prevCenter, center)
         recentered = true
 
         recenter.center = center
@@ -127,9 +121,7 @@ export default () => {
 
       return {
         recentered,
-        centerMoved,
-        center,
-        prevCenter
+        center
       }
 
     }
