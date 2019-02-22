@@ -91,7 +91,7 @@ export default () => {
         deltascale = recenter.distance > 0 ? distance / recenter.distance : 1
   
         global.position = sum2d(orig.position, deltaposition)
-        global.rotation = orig.rotation + deltarotation
+        global.rotation = orig.rotation - deltarotation
         global.scale = orig.scale * deltascale
   
         global.velocity = div2d(global.position, deltat)
@@ -107,8 +107,8 @@ export default () => {
         deltaX: global.position.x,
         deltaY: global.position.y,
         scale: global.scale,
-        rotationRad: -global.rotation,
-        rotation: radToDeg(-global.rotation),
+        rotationRad: global.rotation,
+        rotation: radToDeg(global.rotation),
         velocityX: global.velocity.x,
         velocityY: global.velocity.y,
         velocity: velocityMax,
