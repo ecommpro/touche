@@ -1,12 +1,8 @@
 import inputEvents from 'touche/input/dom'; 
-
-import createVirtualInput from 'touche/input/virtual';
 import createManager from 'touche/manager'
-
-import inertiaGenerator from 'touche/inertiaGenerator'
 import transform from 'touche/helper/2d/transform'
 
-function touche(el, options = {}) {
+const touche = (el, options = {}) => {
   
   const input = inputEvents({el})
   const manager = createManager()
@@ -32,8 +28,7 @@ Object.assign(touche, {
   },
   input: {
     virtual: require('touche/input/virtual').default,
-  },
-  inertiaGenerator,
+  },  
   transform
 })
 

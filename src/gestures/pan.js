@@ -48,8 +48,8 @@ export default (options = {}) => {
       thresholdReached = thresholdReached || abs(deltax) > threshold || abs(deltay) > threshold
 
       if (this.isProcessing() && okPointers && thresholdReached) {
-        this.emit(`${event}start`)
         this.start()
+        this.emit(`${event}start`)
       }
 
       if (input.action & POINTER_MOVE && this.isStarted()) {

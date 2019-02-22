@@ -6,7 +6,7 @@ import {
   EVENT_MAP
 } from 'touche/input/constants'
 
-export default function(el, callback) {
+export default (el, callback) => {
 
   return Object.assign(Object.create(baseInput(el, callback)), {
     inputType: MOUSE_DEVICE,
@@ -24,4 +24,5 @@ export default function(el, callback) {
       })
     }
   })
+  
 }

@@ -1,8 +1,7 @@
 //import eventEmitter from 'solido-eventemitter';
 import {hypo} from 'touche/helper/math'
-import timeSeries from 'touche/timeSeries';
 
-self = {
+const self = {
   set(x, y) {
     this.x = x
     this.y = y
@@ -28,7 +27,6 @@ export default ({
 
   const object = Object.assign(Object.create(self), {
     t: Date.now(),
-    tracking: timeSeries(),
     dirty: false,
     moved: false,
     x0: x,
@@ -38,8 +36,6 @@ export default ({
     deltax: 0,
     deltay: 0
   });
-
-  //Object.assign(self, eventEmitter());
 
   return object;
 }

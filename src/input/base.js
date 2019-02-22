@@ -42,8 +42,8 @@ export default function({callback = () => {}}) {
         }
       })
 
-      let {device, action, pointerType, id, x, y, event} = inputData
-      const pid = '' + id
+      let {action, id, x, y} = inputData
+      const pid = `${id}`
 
       if (action & POINTER_START) {        
         ownPointers[pid] = true
@@ -57,7 +57,6 @@ export default function({callback = () => {}}) {
       lasty = y
 
       callback(inputData)
-      
       return true
     },
     callback(fn) {

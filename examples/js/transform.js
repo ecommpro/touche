@@ -14,7 +14,8 @@ go: function(el) {
     cx = 0, cy = 0,
     transform = touche.transform(),
     rs = touche.transform(),
-    pivot = touche.transform().setId()
+    pivot = touche.transform().setId(),
+    startInertiaTimeout = 0
   ;
 
   el.style["touch-action"] = "none";
@@ -62,6 +63,16 @@ go: function(el) {
       scale = input.deltaScale;
     })
     .on('touche.recentered', function(result, input, session) {
+
+      //console.log(input)
+      //console.log('recentered', cx, cy)
+      //console.log(session.npointers)
+
+      clearTimeout(startInertiaTimeout)
+      startInertiaTimeout = setTimeout(() => {
+        console.log('start inertia!')
+      }, 100)
+
       pivot.copy(transform);
       scale = 1;
       rotation = 0;
@@ -78,6 +89,9 @@ go: function(el) {
       
       cx = input.centerX - clientRect.left;
       cy = input.centerY - clientRect.top;
+
+      //console.log(cx, cy)
+
       refresh();
     })
     ;

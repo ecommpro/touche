@@ -47,17 +47,14 @@ export default (options = {}) => {
 
       if (this.isProcessing() && okPointers && thresholdReached) {
         this.start()
-        this.emit(`${event}`)
         this.emit(`${event}start`)
       }
       
       if (input.action & POINTER_MOVE && this.isStarted()) {
-        this.emit(`${event}`)
         this.emit(`${event}move`)
       }
 
       if (this.isStarted() && input.isLast) {
-        this.emit(`${event}`)
         this.emit(`${event}end`)
       }
     }

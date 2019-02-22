@@ -41,12 +41,12 @@ export default () => {
     hash(fn) {
       return this
     },
-    addGesture(gesture) {
-      gestureManager.add(gesture)
-      return this
-    },
     addInput(input) {
       inputManager.add(input)
+      return this
+    },
+    addGesture(gesture) {
+      gestureManager.add(gesture)
       return this
     },
   }).initialize()
