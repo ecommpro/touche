@@ -36,6 +36,7 @@ export default () => {
     process(input, session) {
 
       recentered = false
+
       
       const { action } = input
       const { pointers } = session
@@ -107,8 +108,8 @@ export default () => {
         deltaX: global.position.x,
         deltaY: global.position.y,
         scale: global.scale,
-        rotationRad: -global.rotation,
-        rotation: radToDeg(-global.rotation),
+        rotationRad: global.rotation,
+        rotation: radToDeg(global.rotation),
         velocityX: global.velocity.x,
         velocityY: global.velocity.y,
         velocity: velocityMax,

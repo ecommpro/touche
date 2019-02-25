@@ -29,7 +29,11 @@ Object.assign(touche, {
   input: {
     virtual: require('touche/input/virtual').default,
   },  
-  transform
+  transform,
+  math: {
+    angdiff: require('touche/helper/math/angdiff').default,
+    angRange2PI: require('touche/helper/math/angRange2PI').default
+  }
 })
 
 export default touche;
